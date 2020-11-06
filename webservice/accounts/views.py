@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.forms import inlineformset_factory
+
 from .models import *
+from .forms import OrderForm
 
 
 def home(request):
@@ -36,3 +39,54 @@ def customer(request, pk):
                'number_orders': number_orders}
 
     return render(request, 'accounts/customer.html', context)
+
+
+def createOrder(request):
+    form = OrderForm
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {'form': form}
+
+    return render(request, 'accounts/order_form.html', context)
+
+
+def createOrders(request, customer_id):
+    OrderFormSet = inlineformset_factory(
+        Customer, Order, fields=('product', 'status'), extra=10)
+    customer = Customer.objects.get(id=customer_id)
+    formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
+    if request.method == 'POST':
+        formset = OrderFormSet(request.POST, instance=customer)
+        if formset.is_valid():
+            formset.save()
+            return redirect('/')
+    context = {'formset': formset, 'customer': customer}
+
+    return render(request, 'accounts/orders_form.html', context)
+
+
+def updateOrder(request, order_id):
+    order = Order.objects.get(id=order_id)
+    form = OrderForm(instance=order)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    context = {'form': form}
+
+    return render(request, 'accounts/order_form.html', context)
+
+
+def deleteOrder(request, order_id):
+    order = Order.objects.get(id=order_id)
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        order.delete()
+        return redirect('/')
+    context = {'item': order}
+    return render(request, 'accounts/delete.html', context)
