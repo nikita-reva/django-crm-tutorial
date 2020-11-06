@@ -1,0 +1,44 @@
+# Create a virtual environment
+python -m venv *name*
+
+# Activate virtual environment
+env\Scripts\activate
+
+# Check python version
+python --version
+
+# Upgrade pip
+python -m pip install –upgrade pip
+
+# Check pip version
+pip --version
+
+# Install django
+pip install django
+
+# Check django version
+python -m django --version
+
+# Search for pip packages
+pip search *keyword*
+
+# Creat a django project
+django-admin startproject *project name*
+
+# Create new app
+python manage.py startapp *app name*
+
+# Run development server
+python manage.py runserver
+
+# Make migrations
+python manage.py makemigrations
+
+# Migrate to database
+python manage.py migrate
+
+# Create superuser
+python manage.py createsuperuser
+
+# Open python shell
+python manage.py shell
