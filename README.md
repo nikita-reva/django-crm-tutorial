@@ -16,4 +16,4 @@ The series covers many core functionalities of modern MVC web applications, such
 * Authentication
 ... and much more.
 
-With the knowledge that I have gained, I will be able to develop my own applications.
+With the knowledge that I have gained, I will be able to develop and deploy my own applications.
