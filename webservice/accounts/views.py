@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 
 from .models import *
-from .forms import CustomerForm, OrderForm, CreateUserForm
+from .forms import CustomerForm, OrderForm, ProductForm, CreateUserForm
 from .filters import OrderFilter
 from .decorators import *
 
@@ -188,4 +188,46 @@ def deleteOrder(request, order_id):
         order.delete()
         return redirect('/')
     context = {'item': order}
-    return render(request, 'accounts/delete.html', context)
+    return render(request, 'accounts/delete_order.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def createProduct(request):
+    form = ProductForm
+    if request.method == 'POST':
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('products')
+    context = {'form': form}
+
+    return render(request, 'accounts/product_form.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def updateProduct(request, product_id):
+    product = Product.objects.get(id=product_id)
+    form = ProductForm(instance=product)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('products')
+
+    context = {'form': form}
+
+    return render(request, 'accounts/product_form.html', context)
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def deleteProduct(request, product_id):
+    product = Product.objects.get(id=product_id)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, instance=product)
+        product.delete()
+        return redirect('products')
+    context = {'item': product}
+    return render(request, 'accounts/delete_product.html', context)

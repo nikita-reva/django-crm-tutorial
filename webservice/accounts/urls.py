@@ -27,4 +27,10 @@ urlpatterns = [
          views.createOrders, name='create_orders'),
     path('update_order/<str:order_id>/', views.updateOrder, name='update_order'),
     path('delete_order/<str:order_id>/', views.deleteOrder, name='delete_order'),
+
+    path('create_product/', views.createProduct, name='create_product'),
+    path('update_product/<str:product_id>/',
+         views.updateProduct, name='update_product'),
+    path('delete_product/<str:product_id>/',
+         views.deleteProduct, name='delete_product'),
 ]
